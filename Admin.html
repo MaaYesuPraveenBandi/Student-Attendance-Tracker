@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Upload Attendance</title>
+</head>
+<body>
+    <h2>Upload Attendance</h2>
+    <form id="upload-form">
+        <input type="text" name="batch" placeholder="Enter Batch Name" required>
+        <input type="datetime-local" name="dateTime" required>
+        <input type="file" name="file" accept=".csv" required>
+        <button type="submit">Upload</button>
+    </form>
+    <script>
+    document.getElementById("upload-form").addEventListener("submit", async function(event) {
+        event.preventDefault();
+        
+        let formData = new FormData(this);
+        
+        let response = await fetch("http://127.0.0.1:8000/upload_attendance/", {
+            method: "POST",
+            body: formData
+        });
+    
+        let result = await response.json();
+        console.log(result);
+    });
+    </script>    
+</body>
+</html>
