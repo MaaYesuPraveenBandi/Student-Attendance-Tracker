@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Backend Nunchi return chestundi ee bhai Page</title>
+    <style>
+        body { font-family: 'Times New Roman', Times, serif; text-align: center; margin: 50px; }
+        input, button { padding: 10px; margin: 10px; }
+        table { width: 90%; margin: auto; border-collapse: collapse; }
+        th, td { border: 1px solid black; border-radius: 6px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h2>Student Attendance Info MentiBY</h2>
+    <input type="text" id="rollNumber" placeholder="Enter Roll Number">
+    <button onclick="fetchAttendance()">Search</button>
+    <table id="attendanceTable" style="display:none;">
+        <tr>
+            <th>Student</th>
+            <th>Batch</th>
+            <th>Total Sessions</th>
+            <th>Attended Sessions</th>
+            <th>Total Time Attended</th>
+            <th>Total Duration</th>
+            <th>Percentage</th>
+        </tr>
+        <tr id="dataRow"></tr>
+    </table>
+    <script>
+        async function fetchAttendance() {
+            const rollNumber = document.getElementById("rollNumber").value;
+            if (!rollNumber) {
+                alert("Please enter a roll number");
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/get-user-attendance?rollNumber=${rollNumber}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById("attendanceTable").style.display = "table";
+                    const row = document.getElementById("dataRow");
+                    row.innerHTML = `
+                        <td>${data.student}</td>
+                        <td>${data.batch}</td>
+                        <td>${data.totalSessions}</td>
+                        <td>${data.attendedSessions}</td>
+                        <td>${data.totalTimeAttended} mins</td>
+                        <td>${data.totalDuration} mins</td>
+                        <td>${data.percentage}%</td>
+                    `;
+                } else {
+                    alert("Student not found or error fetching data");
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                alert("Failed to fetch data! Console lo check for details");
+            }
+        }
+    </script>    
+</body>
+</html>
